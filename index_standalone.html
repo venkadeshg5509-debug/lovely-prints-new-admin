@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LOVELY PRINTS - Premium Printing Services (Invitations, Business Cards, Bags, T-Shirts)</title>
+  <!-- Google Fonts: Outfit and Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Standalone Stylesheet Link -->
+  <link rel="stylesheet" href="./src/index.css">
+
+  <!-- React & Babel Standalone CDNs -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Firebase Compat CDNs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+
+  <!-- Favicon SVG representation -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2'/%3E%3Cpath d='M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6'/%3E%3Crect x='6' y='14' width='12' height='8' rx='1'/%3E%3C/svg%3E" />
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- stand_alone_script.jsx -->
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // --- Inline Icon Components (SVG equivalents to avoid loading overhead) ---
+    const IconPrinter = ({ size = 24, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>
+    );
+    const IconPhone = ({ size = 24, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    );
+    const IconMail = ({ size = 24, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+    );
+    const IconMapPin = ({ size = 24, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+    );
+    const IconMessageSquare = ({ size = 24, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    );
+    const IconPlus = ({ size = 24, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    );
+    const IconEdit = ({ size = 24, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+    );
+    const IconTrash = ({ size = 24, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+    );
+    const IconLock = ({ size = 24, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    );
+    const IconDatabase = ({ size = 24, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></svg>
+    );
+    const IconArrowLeft = ({ size = 24, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    );
+    const IconArrowRight = ({ size = 24, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    );
+    const IconUpload = ({ size = 24, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    );
+    const IconCheckCircle = ({ size = 24, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    );
+    const IconAlertCircle = ({ size = 24, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    );
+    const IconEye = ({ size = 24, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    );
+    const IconSettings = ({ size = 24, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    );
+    const IconMenu = ({ size = 24, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    );
+    const IconX = ({ size = 24, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    );
+    const IconLogOut = ({ size = 24, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    );
+
+    // --- Mock Data Constants ---
+    const INITIAL_CATEGORIES = [
+      {
+        id: "invitation-card",
+        name: "Invitation Card",
+        description: "Elegant wedding cards, birthday invites, and premium custom celebration cards.",
+        imageUrl: "https://images.unsplash.com/photo-1607344645866-009c320c5ab8?w=800&auto=format&fit=crop&q=80"
+      },
+      {
+        id: "paper-notice",
+        name: "Paper Notice & Flyers",
+        description: "High-volume notice printouts, commercial flyers, pamphlets, and leaflets.",
+        imageUrl: "https://images.unsplash.com/photo-1583508915901-b5f84c1dcde1?w=800&auto=format&fit=crop&q=80"
+      },
+      {
+        id: "business-card",
+        name: "Business Card",
+        description: "Stunning first impressions with matte, glossy, textured, and spot UV visiting cards.",
+        imageUrl: "https://images.unsplash.com/photo-1589254065878-42c9da997008?w=800&auto=format&fit=crop&q=80"
+      },
+      {
+        id: "bag",
+        name: "Shopping & Paper Bags",
+        description: "Eco-friendly kraft paper bags, premium laminated bags, and customized shopping carrier bags.",
+        imageUrl: "https://images.unsplash.com/photo-1544816155-12df9643f363?w=800&auto=format&fit=crop&q=80"
+      },
+      {
+        id: "t-shirt",
+        name: "T-Shirt Print",
+        description: "High-quality screen printing, sublimation, and custom graphics on premium cotton t-shirts.",
+        imageUrl: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80"
+      }
+    ];
+
+    const INITIAL_PRODUCTS = [
+      {
+        id: "prod-inv-1",
+        categoryId: "invitation-card",
+        name: "Royal Velvet Wedding Invitation",
+        description: "Premium velvet finish card with gold foil embossing and elegant laser-cut patterns. Includes matching envelope.",
+        price: "₹45 / card",
+        imageUrl: "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=800&auto=format&fit=crop&q=80"
+      },
+      {
+        id: "prod-inv-2",
+        categoryId: "invitation-card",
+        name: "Minimalist Modern Invite",
+        description: "Clean, contemporary design printed on heavy 350 GSM textured cotton paper. Perfect for modern corporate events or weddings.",
+        price: "₹25 / card",
+        imageUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80"
+      },
+      {
+        id: "prod-inv-3",
+        categoryId: "invitation-card",
+        name: "Golden Flora Celebration Card",
+        description: "Features watercolor flower elements with gold leaf highlights. Beautiful choice for birthdays and anniversaries.",
+        price: "₹30 / card",
+        imageUrl: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=800&auto=format&fit=crop&q=80"
+      },
+      {
+        id: "prod-not-1",
+        categoryId: "paper-notice",
+        name: "A4 Promotional Flyers",
+        description: "Double-sided full color prints on 130 GSM glossy art paper. Excellent clarity for business marketing.",
+        price: "₹1.50 / flyer",
+        imageUrl: "https://images.unsplash.com/photo-1561070791-26c113006238?w=800&auto=format&fit=crop&q=80"
+      },
+      {
+        id: "prod-not-2",
+        categoryId: "paper-notice",
+        name: "Black & White Pamphlets",
+        description: "High-volume notice printing on standard 70 GSM maplitho paper. Economical solution for mass distribution.",
+        price: "₹0.40 / page",
+        imageUrl: "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?w=800&auto=format&fit=crop&q=80"
+      },
+      {
+        id: "prod-bus-1",
+        categoryId: "business-card",
+        name: "Premium Matte Visiting Card",
+        description: "Sophisticated 400 GSM card with a smooth soft-touch matte lamination. Waterproof and tear-resistant.",
+        price: "₹1.20 / card",
+        imageUrl: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop&q=80"
+      },
+      {
+        id: "prod-bus-2",
+        categoryId: "business-card",
+        name: "Golden Embossed Spot UV Card",
+        description: "Make an impact with selective glossy highlights and metallic gold embossing on selective areas.",
+        price: "₹3.50 / card",
+        imageUrl: "https://images.unsplash.com/photo-1594122230689-45899d9e6f69?w=800&auto=format&fit=crop&q=80"
+      },
+      {
+        id: "prod-bag-1",
+        categoryId: "bag",
+        name: "Eco-Friendly Kraft Paper Bag",
+        description: "Strong brown kraft bags with twisted paper handles. Customizable logo print on one or both sides.",
+        price: "₹8.00 / bag",
+        imageUrl: "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=800&auto=format&fit=crop&q=80"
+      },
+      {
+        id: "prod-bag-2",
+        categoryId: "bag",
+        name: "Luxury Laminated Boutique Bag",
+        description: "High-end white board bag with matte finish and soft cotton rope handle. Perfect for jewelry and boutiques.",
+        price: "₹22.00 / bag",
+        imageUrl: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&auto=format&fit=crop&q=80"
+      },
+      {
+        id: "prod-tsh-1",
+        categoryId: "t-shirt",
+        name: "Custom Corporate Polo T-Shirt",
+        description: "Premium collar polo shirt in 220 GSM combed cotton. Perfect for corporate branding with high-quality embroidery.",
+        price: "₹280 / piece",
+        imageUrl: "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=800&auto=format&fit=crop&q=80"
+      },
+      {
+        id: "prod-tsh-2",
+        categoryId: "t-shirt",
+        name: "Screen Printed Event T-Shirt",
+        description: "Lightweight 160 GSM round neck cotton t-shirt. Ideal for group events, college festivals, and promotional wear.",
+        price: "₹150 / piece",
+        imageUrl: "https://images.unsplash.com/photo-1562157873-818bc0726f68?w=800&auto=format&fit=crop&q=80"
+      }
+    ];
+
+    // --- Firebase & LocalStorage Unified State Layer ---
+    const CONFIG_KEY = "lovely_prints_firebase_config";
+    let firebaseDb = null;
+    let firebaseStorage = null;
+    let isFirebaseConfigured = false;
+
+    // Load Firebase configuration
+    const savedConfig = localStorage.getItem(CONFIG_KEY);
+    if (savedConfig) {
+      try {
+        const parsed = JSON.parse(savedConfig);
+        if (parsed.apiKey && parsed.projectId) {
+          firebase.initializeApp(parsed);
+          firebaseDb = firebase.firestore();
+          firebaseStorage = firebase.storage();
+          isFirebaseConfigured = true;
+        }
+      } catch (e) {
+        console.error("Firebase standalone setup failed, falling back to LocalStorage:", e);
+      }
+    }
+
+    // Storage access methods
+    const getLocalCategories = () => {
+      const saved = localStorage.getItem("lovely_prints_categories");
+      if (!saved) {
+        localStorage.setItem("lovely_prints_categories", JSON.stringify(INITIAL_CATEGORIES));
+        return INITIAL_CATEGORIES;
+      }
+      return JSON.parse(saved);
+    };
+
+    const saveLocalCategories = (cats) => localStorage.setItem("lovely_prints_categories", JSON.stringify(cats));
+
+    const getLocalProducts = () => {
+      const saved = localStorage.getItem("lovely_prints_products");
+      if (!saved) {
+        localStorage.setItem("lovely_prints_products", JSON.stringify(INITIAL_PRODUCTS));
+        return INITIAL_PRODUCTS;
+      }
+      return JSON.parse(saved);
+    };
+
+    const saveLocalProducts = (prods) => localStorage.setItem("lovely_prints_products", JSON.stringify(prods));
+
+    const getStoredCategories = async () => {
+      if (isFirebaseConfigured && firebaseDb) {
+        try {
+          const snapshot = await firebaseDb.collection("categories").get();
+          const items = [];
+          snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+          if (items.length === 0) {
+            for (const cat of INITIAL_CATEGORIES) {
+              await firebaseDb.collection("categories").doc(cat.id).set({
+                name: cat.name,
+                description: cat.description,
+                imageUrl: cat.imageUrl
+              });
+              items.push(cat);
+            }
+          }
+          return items;
+        } catch (e) {
+          console.error("Firestore categories error, using LocalStorage:", e);
+          return getLocalCategories();
+        }
+      }
+      return getLocalCategories();
+    };
+
+    const getStoredProducts = async () => {
+      if (isFirebaseConfigured && firebaseDb) {
+        try {
+          const snapshot = await firebaseDb.collection("products").get();
+          const items = [];
+          snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+          if (items.length === 0) {
+            for (const prod of INITIAL_PRODUCTS) {
+              await firebaseDb.collection("products").doc(prod.id).set({
+                categoryId: prod.categoryId,
+                name: prod.name,
+                description: prod.description,
+                price: prod.price,
+                imageUrl: prod.imageUrl
+              });
+              items.push(prod);
+            }
+          }
+          return items;
+        } catch (e) {
+          console.error("Firestore products error, using LocalStorage:", e);
+          return getLocalProducts();
+        }
+      }
+      return getLocalProducts();
+    };
+
+    // --- Header Component ---
+    function Header({ currentView, setCurrentView }) {
+      const [mobileOpen, setMobileOpen] = useState(false);
+
+      const handleNav = (view, sectionId) => {
+        setMobileOpen(false);
+        setCurrentView(view);
+        if (sectionId) {
+          setTimeout(() => {
+            const el = document.getElementById(sectionId);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }, 100);
+        }
+      };
+
+      return (
+        <header>
+          <div className="container header-container">
+            <div className="logo" onClick={() => handleNav('home')}>
+              <IconPrinter size={28} style={{ strokeWidth: 2.5 }} />
+              <span>LOVELY PRINTS</span>
+            </div>
+            
+            <nav className="nav-links">
+              <span className={`nav-link ${currentView === 'home' ? 'active' : ''}`} onClick={() => handleNav('home')}>Home</span>
+              <span className="nav-link" onClick={() => handleNav('home', 'services')}>Services</span>
+              <span className="nav-link" onClick={() => handleNav('home', 'contact')}>Contact</span>
+              <button className="btn-admin" onClick={() => handleNav('admin')}>
+                <IconLock size={16} />
+                Admin Panel
+              </button>
+            </nav>
+
+            <button className="mobile-nav-toggle" onClick={() => setMobileOpen(!mobileOpen)}>
+              {mobileOpen ? <IconX size={24} /> : <IconMenu size={24} />}
+            </button>
+
+            {mobileOpen && (
+              <nav className="nav-links mobile-open">
+                <span className={`nav-link ${currentView === 'home' ? 'active' : ''}`} onClick={() => handleNav('home')}>Home</span>
+                <span className="nav-link" onClick={() => handleNav('home', 'services')}>Services</span>
+                <span className="nav-link" onClick={() => handleNav('home', 'contact')}>Contact</span>
+                <button className="btn-admin" onClick={() => handleNav('admin')} style={{ width: '100%', justifyContent: 'center' }}>
+                  <IconLock size={16} />
+                  Admin Panel
+                </button>
+              </nav>
+            )}
+          </div>
+        </header>
+      );
+    }
+
+    // --- Hero Component ---
+    function Hero({ onExploreClick, onContactClick }) {
+      return (
+        <section className="hero">
+          <div className="container hero-grid">
+            <div className="hero-content">
+              <span className="badge">Premium Printing Services</span>
+              <h1 className="hero-title">
+                Your Vision, Printed Perfectly at <span>LOVELY PRINTS</span>
+              </h1>
+              <p className="hero-desc">
+                We deliver top-quality custom printing for invitation cards, paper notices, 
+                professional business cards, customized shopping bags, and premium screen-printed t-shirts. 
+                Designed to elevate your brand and celebrations.
+              </p>
+              <div className="hero-ctas">
+                <button className="btn-primary" onClick={onExploreClick}>
+                  Explore Services
+                  <IconArrowRight size={18} />
+                </button>
+                <button className="btn-secondary" onClick={onContactClick}>
+                  <IconMessageSquare size={18} />
+                  Enquire Now
+                </button>
+              </div>
+            </div>
+            <div className="hero-image-wrapper">
+              <div className="hero-image-backdrop"></div>
+              <img 
+                src="./public/hero.png" 
+                alt="Lovely Prints custom invites, cards, bags, and t-shirts mockup" 
+                className="hero-image"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "https://images.unsplash.com/photo-1583508915901-b5f84c1dcde1?w=800";
+                }}
+              />
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    // --- ServicesGrid Component ---
+    function ServicesGrid({ categories, onSelect }) {
+      return (
+        <section id="services" style={{ backgroundColor: 'var(--white)' }}>
+          <div className="container">
+            <div className="section-header">
+              <span className="badge" style={{ marginBottom: '1rem' }}>Our Specialties</span>
+              <h2 className="section-title">Our Printing Services</h2>
+              <p className="section-desc">
+                Select a category to view all product designs, templates, and printing formats we offer. 
+                Click on any item to send a direct WhatsApp enquiry!
+              </p>
+            </div>
+            <div className="services-grid">
+              {categories.map((cat) => (
+                <div key={cat.id} className="service-card">
+                  <div className="service-img-container">
+                    <img src={cat.imageUrl} alt={cat.name} className="service-img" />
+                  </div>
+                  <div className="service-body">
+                    <h3 className="service-card-title">{cat.name}</h3>
+                    <p className="service-card-desc">{cat.description}</p>
+                    <div className="service-btn" onClick={() => onSelect(cat.id)}>
+                      View Designs
+                      <IconArrowRight size={16} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    // --- CategoryView Component ---
+    function CategoryView({ category, products, onBack }) {
+      const [selectedProduct, setSelectedProduct] = useState(null);
+      const whatsappNumber = "919600372130";
+
+      const getWhatsAppLink = (prodName) => {
+        const text = `Hi Lovely Prints! I am interested in "${prodName}" under the "${category.name}" category. Can you please share price and order details?`;
+        return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+      };
+
+      const handleEnquiry = (e, prodName) => {
+        e.stopPropagation();
+        window.open(getWhatsAppLink(prodName), '_blank');
+      };
+
+      return (
+        <div>
+          <div className="back-banner">
+            <div className="container">
+              <button className="back-btn" onClick={onBack}>
+                <IconArrowLeft size={18} />
+                Back to Home Page
+              </button>
+            </div>
+          </div>
+
+          <div className="category-header">
+            <div className="container category-info-grid">
+              <div>
+                <span className="badge" style={{ marginBottom: '1rem' }}>Category</span>
+                <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem', color: 'var(--primary-dark)' }}>{category.name}</h1>
+                <p style={{ color: 'var(--text-main)', fontSize: '1.1rem', lineHeight: '1.6' }}>{category.description}</p>
+              </div>
+              <div>
+                <img src={category.imageUrl} alt={category.name} className="category-banner-img" />
+              </div>
+            </div>
+          </div>
+
+          <div className="container">
+            {products.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '6rem 0', color: 'var(--text-muted)' }}>
+                <h3>No products found in this category yet.</h3>
+              </div>
+            ) : (
+              <div className="products-grid">
+                {products.map((product) => (
+                  <div key={product.id} className="product-card" onClick={() => setSelectedProduct(product)}>
+                    <div className="product-img-wrapper">
+                      <img src={product.imageUrl} alt={product.name} className="product-img" />
+                    </div>
+                    <div className="product-info">
+                      <h3 className="product-name">{product.name}</h3>
+                      <span className="product-price">{product.price || 'Contact for price'}</span>
+                      <p className="product-desc-short">{product.description}</p>
+                      <button className="product-enquiry-btn" onClick={(e) => handleEnquiry(e, product.name)}>
+                        <IconMessageSquare size={16} fill="white" />
+                        Enquire on WhatsApp
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Modal overlay */}
+          {selectedProduct && (
+            <div className="modal-overlay" onClick={() => setSelectedProduct(null)}>
+              <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                <button className="modal-close" onClick={() => setSelectedProduct(null)}>
+                  <IconX size={20} />
+                </button>
+                <div className="modal-grid">
+                  <div className="modal-img-container">
+                    <img src={selectedProduct.imageUrl} alt={selectedProduct.name} />
+                  </div>
+                  <div className="modal-body">
+                    <span className="modal-category">{category.name}</span>
+                    <h2 className="modal-title">{selectedProduct.name}</h2>
+                    <div className="modal-price">{selectedProduct.price || 'Contact for price'}</div>
+                    <p className="modal-desc">{selectedProduct.description}</p>
+                    <div className="modal-actions">
+                      <a href={getWhatsAppLink(selectedProduct.name)} target="_blank" rel="noopener noreferrer" className="btn-whatsapp-large">
+                        <IconMessageSquare size={20} fill="white" />
+                        Send WhatsApp Enquiry
+                      </a>
+                      <button className="btn-secondary" onClick={() => setSelectedProduct(null)} style={{ justifyContent: 'center' }}>
+                        Close Window
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // --- ContactSection Component ---
+    function ContactSection() {
+      const whatsappNumber = "919600372130";
+      const normalPhone = "+919600372130";
+      const emailAddress = "VENKADESHG5509@GMAIL.COM";
+      const physicalAddress = "Lovely Prints, Main Bazar Road, Salem, Tamil Nadu - 636001";
+
+      return (
+        <section id="contact" className="contact-section">
+          <div className="container">
+            <div className="section-header">
+              <span className="badge" style={{ marginBottom: '1rem' }}>Get in Touch</span>
+              <h2 className="section-title">Contact Us</h2>
+              <p className="section-desc">
+                Have questions about pricing, bulk orders, or custom designs? Reach out to us via any channel below.
+              </p>
+            </div>
+
+            <div className="contact-grid">
+              <div className="contact-info-cards">
+                <div className="contact-card">
+                  <div className="contact-icon-wrapper"><IconPhone size={24} /></div>
+                  <h3 className="contact-card-title">Call Us</h3>
+                  <a href={`tel:${normalPhone}`} className="contact-card-detail">{normalPhone}</a>
+                </div>
+
+                <div className="contact-card">
+                  <div className="contact-icon-wrapper" style={{ color: '#25d366' }}><IconMessageSquare size={24} /></div>
+                  <h3 className="contact-card-title">WhatsApp</h3>
+                  <a href={`https://wa.me/${whatsappNumber}?text=Hi%20Lovely%20Prints,%20enquiring%20about%20printing.`} target="_blank" rel="noopener noreferrer" className="contact-card-detail">+91 96003 72130</a>
+                </div>
+
+                <div className="contact-card">
+                  <div className="contact-icon-wrapper"><IconMail size={24} /></div>
+                  <h3 className="contact-card-title">Email Us</h3>
+                  <a href={`mailto:${emailAddress}`} className="contact-card-detail">{emailAddress.toLowerCase()}</a>
+                </div>
+
+                <div className="contact-card">
+                  <div className="contact-icon-wrapper"><IconMapPin size={24} /></div>
+                  <h3 className="contact-card-title">Our Shop</h3>
+                  <p className="contact-card-detail">{physicalAddress}</p>
+                </div>
+              </div>
+
+              <div className="contact-cta-wrapper">
+                <h3 className="contact-cta-title">Direct Inquiry</h3>
+                <p className="contact-cta-desc">Send us your requirements and we will give you a custom quote in minutes.</p>
+                <a href={`https://wa.me/${whatsappNumber}?text=Hi%20Lovely%20Prints!%20I%20have%20an%20enquiry.`} target="_blank" rel="noopener noreferrer" className="btn-whatsapp-large">
+                  <IconMessageSquare size={22} fill="white" />
+                  Chat on WhatsApp
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    // --- AdminPanel Component ---
+    function AdminPanel({ 
+      categories, 
+      products, 
+      onSaveCategory, 
+      onDeleteCategory, 
+      onSaveProduct, 
+      onDeleteProduct 
+    }) {
+      const [isAuthenticated, setIsAuthenticated] = useState(() => {
+        return sessionStorage.getItem('admin_authenticated') === 'true';
+      });
+      const [passwordInput, setPasswordInput] = useState('');
+      const [loginError, setLoginError] = useState(false);
+      const [showPassword, setShowPassword] = useState(false);
+      const [activeTab, setActiveTab] = useState('products');
+      
+      const [catEditing, setCatEditing] = useState(null);
+      const [catName, setCatName] = useState('');
+      const [catDesc, setCatDesc] = useState('');
+      const [catImage, setCatImage] = useState('');
+      const [catFormOpen, setCatFormOpen] = useState(false);
+      
+      const [prodEditing, setProdEditing] = useState(null);
+      const [prodCategoryId, setProdCategoryId] = useState('');
+      const [prodName, setProdName] = useState('');
+      const [prodDesc, setProdDesc] = useState('');
+      const [prodPrice, setProdPrice] = useState('');
+      const [prodImage, setProdImage] = useState('');
+      const [prodFormOpen, setProdFormOpen] = useState(false);
+      const [isUploading, setIsUploading] = useState(false);
+
+      const [firebaseKeys, setFirebaseKeys] = useState(() => {
+        const active = localStorage.getItem(CONFIG_KEY);
+        return active ? JSON.stringify(JSON.parse(active), null, 2) : '';
+      });
+      const [saveStatus, setSaveStatus] = useState('');
+
+      // Auto compression
+      const handleImageUpload = (file, callback) => {
+        if (!file) return;
+        setIsUploading(true);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            const maxDim = 600;
+            let width = img.width;
+            let height = img.height;
+            if (width > height) {
+              if (width > maxDim) { height *= maxDim / width; width = maxDim; }
+            } else {
+              if (height > maxDim) { width *= maxDim / height; height = maxDim; }
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            const compressed = canvas.toDataURL('image/jpeg', 0.75);
+            setIsUploading(false);
+            callback(compressed);
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      };
+
+      const handleCatSubmit = async (e) => {
+        e.preventDefault();
+        const catId = catEditing || `cat-${Date.now()}`;
+        await onSaveCategory({
+          id: catId,
+          name: catName,
+          description: catDesc,
+          imageUrl: catImage || 'https://images.unsplash.com/photo-1561070791-26c113006238?w=800'
+        });
+        setCatFormOpen(false);
+      };
+
+      const handleProdSubmit = async (e) => {
+        e.preventDefault();
+        const prodId = prodEditing || `prod-${Date.now()}`;
+        let finalUrl = prodImage;
+
+        if (isFirebaseConfigured && firebaseStorage && prodImage.startsWith('data:image/')) {
+          setIsUploading(true);
+          try {
+            const ref = firebaseStorage.ref().child(`products/${prodId}`);
+            await ref.putString(prodImage, 'data_url');
+            finalUrl = await ref.getDownloadURL();
+          } catch (e) {
+            console.error("Firebase Storage upload failed, keeping Base64:", e);
+          } finally {
+            setIsUploading(false);
+          }
+        }
+
+        await onSaveProduct({
+          id: prodId,
+          categoryId: prodCategoryId || categories[0]?.id,
+          name: prodName,
+          description: prodDesc,
+          price: prodPrice,
+          imageUrl: finalUrl || 'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=800'
+        });
+        setProdFormOpen(false);
+      };
+
+      const handleKeysSubmit = (e) => {
+        e.preventDefault();
+        try {
+          const parsed = JSON.parse(firebaseKeys);
+          localStorage.setItem(CONFIG_KEY, JSON.stringify(parsed));
+          setSaveStatus('success');
+          setTimeout(() => window.location.reload(), 1000);
+        } catch (err) {
+          setSaveStatus('error');
+        }
+      };
+
+      const handleDisconnect = () => {
+        if (confirm("Disconnect Cloud DB?")) {
+          localStorage.removeItem(CONFIG_KEY);
+          window.location.reload();
+        }
+      };
+
+      if (!isAuthenticated) {
+        const handleLoginSubmit = (e) => {
+          e.preventDefault();
+          if (passwordInput === 'selvaraj123') {
+            sessionStorage.setItem('admin_authenticated', 'true');
+            setIsAuthenticated(true);
+            setLoginError(false);
+          } else {
+            setLoginError(true);
+          }
+        };
+
+        return (
+          <div className="container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh', padding: '4rem 0' }}>
+            <div style={{ backgroundColor: 'var(--white)', border: '1px solid var(--primary-soft)', borderRadius: 'var(--radius-lg)', padding: '3rem', width: '100%', maxWidth: '420px', boxShadow: 'var(--shadow-xl)', textAlign: 'center' }}>
+              <div style={{ width: '4rem', height: '4rem', borderRadius: '50%', backgroundColor: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem auto' }}>
+                <IconLock size={32} />
+              </div>
+              <h2 style={{ fontSize: '1.75rem', marginBottom: '0.5rem', color: 'var(--primary-dark)' }}>Admin Access</h2>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '2rem' }}>Please enter passcode to unlock the management console.</p>
+              
+              <form onSubmit={handleLoginSubmit}>
+                <div className="form-group" style={{ textAlign: 'left', position: 'relative' }}>
+                  <label className="form-label">Password</label>
+                  <div style={{ position: 'relative' }}>
+                    <input 
+                      type={showPassword ? "text" : "password"} 
+                      className="form-control" 
+                      value={passwordInput} 
+                      onChange={(e) => setPasswordInput(e.target.value)} 
+                      placeholder="Enter passcode"
+                      style={{ paddingRight: '2.5rem' }}
+                      required
+                    />
+                    <button 
+                      type="button" 
+                      onClick={() => setShowPassword(!showPassword)}
+                      style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                    >
+                      <IconEye size={16} />
+                    </button>
+                  </div>
+                  {loginError && (
+                    <div style={{ color: '#ef4444', fontSize: '0.8rem', marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                      <IconAlertCircle size={14} />
+                      Incorrect password. (Try default: selvaraj123)
+                    </div>
+                  )}
+                </div>
+                
+                <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '1.5rem' }}>
+                  Unlock Dashboard
+                </button>
+              </form>
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="container admin-container">
+          <div className="admin-header">
+            <div>
+              <span className="badge" style={{ marginBottom: '0.5rem' }}>Management Console</span>
+              <h1 style={{ fontSize: '2rem' }}>Control Panel</h1>
+            </div>
+            <div className={`admin-status ${isFirebaseConfigured ? 'status-cloud' : 'status-demo'}`}>
+              <IconDatabase size={16} />
+              {isFirebaseConfigured ? 'Connected to Firebase Cloud DB' : 'Using Local Browser Storage'}
+            </div>
+          </div>
+
+          <div className="admin-layout">
+            <aside className="admin-sidebar">
+              <button className={`admin-tab-btn ${activeTab === 'products' ? 'active' : ''}`} onClick={() => { setActiveTab('products'); setProdFormOpen(false); }}>
+                <IconEye size={18} /> Manage Products
+              </button>
+              <button className={`admin-tab-btn ${activeTab === 'categories' ? 'active' : ''}`} onClick={() => { setActiveTab('categories'); setCatFormOpen(false); }}>
+                <IconSettings size={18} /> Manage Categories
+              </button>
+              <button className={`admin-tab-btn ${activeTab === 'firebase' ? 'active' : ''}`} onClick={() => setActiveTab('firebase')}>
+                <IconDatabase size={18} /> Database Settings
+              </button>
+              <button className="admin-tab-btn" onClick={() => { sessionStorage.removeItem('admin_authenticated'); setIsAuthenticated(false); }} style={{ marginTop: '2rem', color: '#ef4444', borderTop: '1px solid var(--gray-border)', paddingTop: '1rem', borderRadius: '0' }}>
+                <IconLogOut size={18} /> Lock Console
+              </button>
+            </aside>
+
+            <main className="admin-content-panel">
+              {activeTab === 'products' && (
+                !prodFormOpen ? (
+                  <div>
+                    <div className="panel-header">
+                      <h2 className="panel-title">All Products ({products.length})</h2>
+                      <button className="btn-primary" onClick={() => { setProdEditing(null); setProdCategoryId(categories[0]?.id); setProdName(''); setProdDesc(''); setProdPrice(''); setProdImage(''); setProdFormOpen(true); }}>
+                        <IconPlus size={16} /> Add Product
+                      </button>
+                    </div>
+                    <table className="admin-table">
+                      <thead>
+                        <tr>
+                          <th>Image</th>
+                          <th>Name</th>
+                          <th>Category</th>
+                          <th>Price</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {products.map(p => (
+                          <tr key={p.id}>
+                            <td><img src={p.imageUrl} alt={p.name} width="40" height="40" style={{ objectFit: 'cover', borderRadius: '4px' }} /></td>
+                            <td style={{ fontWeight: 600 }}>{p.name}</td>
+                            <td><span className="badge-category">{categories.find(c => c.id === p.categoryId)?.name || 'Unknown'}</span></td>
+                            <td><strong>{p.price || 'Contact'}</strong></td>
+                            <td>
+                              <div className="action-btns">
+                                <button className="btn-icon" onClick={() => { setProdEditing(p.id); setProdCategoryId(p.categoryId); setProdName(p.name); setProdDesc(p.description); setProdPrice(p.price || ''); setProdImage(p.imageUrl); setProdFormOpen(true); }}><IconEdit size={14} /></button>
+                                <button className="btn-icon delete" onClick={() => confirm("Delete?") && onDeleteProduct(p.id)}><IconTrash size={14} /></button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <form onSubmit={handleProdSubmit}>
+                    <h2 className="panel-title">{prodEditing ? 'Edit Product' : 'Add New Product'}</h2>
+                    
+                    <div className="form-group" style={{ marginTop: '1rem' }}>
+                      <label className="form-label">Category</label>
+                      <select className="form-control" value={prodCategoryId} onChange={e => setProdCategoryId(e.target.value)}>
+                        {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                      </select>
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">Product Name</label>
+                      <input type="text" className="form-control" value={prodName} onChange={e => setProdName(e.target.value)} required />
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">Price</label>
+                      <input type="text" className="form-control" value={prodPrice} onChange={e => setProdPrice(e.target.value)} placeholder="e.g. ₹30 / card" />
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">Image Upload</label>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                        <div>
+                          <div className={`image-upload-area ${prodImage ? 'has-image' : ''}`}>
+                            {prodImage ? <img src={prodImage} className="upload-preview" /> : <div className="upload-placeholder"><IconUpload size={24} /><div>Select Gallery Image</div></div>}
+                            <input type="file" accept="image/*" id="standalone-file" style={{ display: 'none' }} onChange={e => handleImageUpload(e.target.files[0], setProdImage)} />
+                            <button type="button" className="btn-secondary" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem', margin: '0.5rem auto' }} onClick={() => document.getElementById('standalone-file').click()}>Browse File</button>
+                          </div>
+                        </div>
+                        <div>
+                          <label className="form-label" style={{ fontSize: '0.8rem' }}>Or Image Web URL</label>
+                          <input type="text" className="form-control" value={prodImage.startsWith('data:') ? '' : prodImage} onChange={e => setProdImage(e.target.value)} />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">Description</label>
+                      <textarea className="form-control" value={prodDesc} onChange={e => setProdDesc(e.target.value)} required />
+                    </div>
+
+                    <div className="form-actions">
+                      <button type="button" className="btn-secondary" onClick={() => setProdFormOpen(false)}>Cancel</button>
+                      <button type="submit" className="btn-primary" disabled={isUploading}>{isUploading ? 'Saving...' : 'Save Product'}</button>
+                    </div>
+                  </form>
+                )
+              )}
+
+              {activeTab === 'categories' && (
+                !catFormOpen ? (
+                  <div>
+                    <div className="panel-header">
+                      <h2 className="panel-title">Service Categories</h2>
+                      <button className="btn-primary" onClick={() => { setCatEditing(null); setCatName(''); setCatDesc(''); setCatImage(''); setCatFormOpen(true); }}>
+                        <IconPlus size={16} /> Add Category
+                      </button>
+                    </div>
+                    <table className="admin-table">
+                      <thead>
+                        <tr>
+                          <th>Image</th>
+                          <th>Name</th>
+                          <th>Description</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {categories.map(c => (
+                          <tr key={c.id}>
+                            <td><img src={c.imageUrl} alt={c.name} width="40" height="40" style={{ objectFit: 'cover', borderRadius: '4px' }} /></td>
+                            <td style={{ fontWeight: 600 }}>{c.name}</td>
+                            <td style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{c.description}</td>
+                            <td>
+                              <div className="action-btns">
+                                <button className="btn-icon" onClick={() => { setCatEditing(c.id); setCatName(c.name); setCatDesc(c.description); setCatImage(c.imageUrl); setCatFormOpen(true); }}><IconEdit size={14} /></button>
+                                <button className="btn-icon delete" onClick={() => confirm("Delete this category?") && onDeleteCategory(c.id)}><IconTrash size={14} /></button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <form onSubmit={handleCatSubmit}>
+                    <h2 className="panel-title">{catEditing ? 'Edit Category' : 'Add Category'}</h2>
+                    <div className="form-group" style={{ marginTop: '1rem' }}>
+                      <label className="form-label">Category Name</label>
+                      <input type="text" className="form-control" value={catName} onChange={e => setCatName(e.target.value)} required />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Banner Image URL</label>
+                      <input type="text" className="form-control" value={catImage} onChange={e => setCatImage(e.target.value)} />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Description</label>
+                      <textarea className="form-control" value={catDesc} onChange={e => setCatDesc(e.target.value)} required />
+                    </div>
+                    <div className="form-actions">
+                      <button type="button" className="btn-secondary" onClick={() => setCatFormOpen(false)}>Cancel</button>
+                      <button type="submit" className="btn-primary">Save Category</button>
+                    </div>
+                  </form>
+                )
+              )}
+
+              {activeTab === 'firebase' && (
+                <form onSubmit={handleKeysSubmit}>
+                  <h2 className="panel-title">Database Cloud Connection</h2>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                    Paste your Firebase JSON config object below to sync live across devices.
+                  </p>
+                  <div className="form-group">
+                    <textarea className="form-control" style={{ fontFamily: 'monospace', fontSize: '0.8rem', minHeight: '150px' }} value={firebaseKeys} onChange={e => setFirebaseKeys(e.target.value)} placeholder='{"apiKey": "...", "projectId": "..."}' required />
+                  </div>
+                  {saveStatus === 'success' && <div style={{ color: '#10b981', fontWeight: 600, marginBottom: '1rem' }}>✓ Saved! Refreshing connection...</div>}
+                  {saveStatus === 'error' && <div style={{ color: '#ef4444', fontWeight: 600, marginBottom: '1rem' }}>✗ Invalid JSON brackets.</div>}
+                  <div style={{ display: 'flex', gap: '1rem' }}>
+                    <button type="submit" className="btn-primary">Save Config & Connect</button>
+                    {isFirebaseConfigured && <button type="button" className="btn-secondary" style={{ color: '#ef4444', borderColor: '#fca5a5' }} onClick={handleDisconnect}><IconLogOut size={14} /> Disconnect</button>}
+                  </div>
+                </form>
+              )}
+            </main>
+          </div>
+        </div>
+      );
+    }
+
+    // --- Main App Component ---
+    function App() {
+      const [view, setView] = useState('home');
+      const [catId, setCatId] = useState(null);
+      const [categories, setCategories] = useState([]);
+      const [products, setProducts] = useState([]);
+      const [loading, setLoading] = useState(true);
+
+      useEffect(() => {
+        async function fetchAll() {
+          setLoading(true);
+          const cats = await getStoredCategories();
+          const prods = await getStoredProducts();
+          setCategories(cats);
+          setProducts(prods);
+          setLoading(false);
+        }
+        fetchAll();
+      }, []);
+
+      const saveCategory = async (newCat) => {
+        if (isFirebaseConfigured && firebaseDb) {
+          await firebaseDb.collection("categories").doc(newCat.id).set({
+            name: newCat.name,
+            description: newCat.description,
+            imageUrl: newCat.imageUrl
+          });
+        }
+        const cats = getLocalCategories();
+        const idx = cats.findIndex(c => c.id === newCat.id);
+        if (idx > -1) cats[idx] = newCat; else cats.push(newCat);
+        saveLocalCategories(cats);
+        setCategories(await getStoredCategories());
+      };
+
+      const deleteCategory = async (id) => {
+        if (isFirebaseConfigured && firebaseDb) {
+          await firebaseDb.collection("categories").doc(id).delete();
+          // Delete category products
+          const snapshot = await firebaseDb.collection("products").where("categoryId", "==", id).get();
+          snapshot.forEach(doc => doc.ref.delete());
+        }
+        const cats = getLocalCategories().filter(c => c.id !== id);
+        saveLocalCategories(cats);
+        const prods = getLocalProducts().filter(p => p.categoryId !== id);
+        saveLocalProducts(prods);
+        setCategories(await getStoredCategories());
+        setProducts(await getStoredProducts());
+      };
+
+      const saveProduct = async (newProd) => {
+        if (isFirebaseConfigured && firebaseDb) {
+          await firebaseDb.collection("products").doc(newProd.id).set({
+            categoryId: newProd.categoryId,
+            name: newProd.name,
+            description: newProd.description,
+            price: newProd.price,
+            imageUrl: newProd.imageUrl
+          });
+        }
+        const prods = getLocalProducts();
+        const idx = prods.findIndex(p => p.id === newProd.id);
+        if (idx > -1) prods[idx] = newProd; else prods.push(newProd);
+        saveLocalProducts(prods);
+        setProducts(await getStoredProducts());
+      };
+
+      const deleteProduct = async (id) => {
+        if (isFirebaseConfigured && firebaseDb) {
+          await firebaseDb.collection("products").doc(id).delete();
+        }
+        const prods = getLocalProducts().filter(p => p.id !== id);
+        saveLocalProducts(prods);
+        setProducts(await getStoredProducts());
+      };
+
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+          <Header currentView={view} setCurrentView={setView} />
+          
+          {loading ? (
+            <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '400px', gap: '1rem' }}>
+              <div style={{ width: '40px', height: '40px', border: '4px solid var(--primary-light)', borderTopColor: 'var(--primary)', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+              <p style={{ color: 'var(--text-muted)', fontWeight: 500 }}>Loading LOVELY PRINTS...</p>
+            </div>
+          ) : (
+            <main style={{ flexGrow: 1 }}>
+              {view === 'home' && (
+                <>
+                  <Hero 
+                    onExploreClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
+                    onContactClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                  />
+                  <ServicesGrid 
+                    categories={categories}
+                    onSelect={(id) => { setCatId(id); setView('category'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  />
+
+                  {/* About Section */}
+                  <section id="about" style={{ backgroundColor: 'var(--gray-light)', borderTop: '1px solid rgba(124, 58, 237, 0.05)' }}>
+                    <div className="container" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
+                      <div>
+                        <span className="badge">Our Journey</span>
+                        <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '1.5rem' }}>About LOVELY PRINTS</h2>
+                        <p style={{ color: 'var(--text-main)', fontSize: '1.05rem', lineHeight: '1.6', marginBottom: '1rem' }}>
+                          At Lovely Prints, we believe that premium printing shouldn't be complicated. We specialize in wedding and invitation cards, business visiting cards, packaging bags, flyers, and custom apparel prints.
+                        </p>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '2rem' }}>
+                          Operating with modern screen-printing and offset technologies, we cater to bulk orders, businesses, and event planners with color-perfect detailing.
+                        </p>
+                        <div style={{ display: 'flex', gap: '2rem' }}>
+                          <div style={{ borderLeft: '3px solid var(--primary)', paddingLeft: '1rem' }}>
+                            <h4 style={{ fontSize: '1.5rem', color: 'var(--primary-dark)' }}>100%</h4>
+                            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Satisfaction</p>
+                          </div>
+                          <div style={{ borderLeft: '3px solid var(--primary)', paddingLeft: '1rem' }}>
+                            <h4 style={{ fontSize: '1.5rem', color: 'var(--primary-dark)' }}>Fast</h4>
+                            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>WhatsApp Quote</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <div style={{ backgroundColor: 'var(--white)', border: '1px solid var(--primary-soft)', borderRadius: 'var(--radius-lg)', padding: '2rem', boxShadow: 'var(--shadow-lg)', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><IconPrinter size={20} /></div>
+                            <div>
+                              <h4 style={{ fontWeight: 600 }}>Precision Printing</h4>
+                              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Embossing & Gold Foil detailing</p>
+                            </div>
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><IconMail size={20} /></div>
+                            <div>
+                              <h4 style={{ fontWeight: 600 }}>Custom Packaging</h4>
+                              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Envelopes, gift boxes & boutique bags</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  <ContactSection />
+                </>
+              )}
+
+              {view === 'category' && (
+                <CategoryView 
+                  category={categories.find(c => c.id === catId)}
+                  products={products.filter(p => p.categoryId === catId)}
+                  onBack={() => { setView('home'); setCatId(null); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                />
+              )}
+
+              {view === 'admin' && (
+                <AdminPanel 
+                  categories={categories}
+                  products={products}
+                  onSaveCategory={saveCategory}
+                  onDeleteCategory={deleteCategory}
+                  onSaveProduct={saveProduct}
+                  onDeleteProduct={deleteProduct}
+                />
+              )}
+            </main>
+          )}
+
+          <footer>
+            <div className="container footer-grid">
+              <div>
+                <div className="footer-logo"><IconPrinter size={22} style={{ marginRight: '0.5rem', verticalAlign: 'middle' }} />LOVELY<span> PRINTS</span></div>
+                <p className="footer-desc">Your one-stop destination for invitation cards, notices, business cards, bags, and apparel printing.</p>
+              </div>
+              <div>
+                <h4 className="footer-title">Our Services</h4>
+                <ul className="footer-links">
+                  {categories.map(c => (
+                    <li key={c.id}><a href="#" onClick={(e) => { e.preventDefault(); setCatId(c.id); setView('category'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>{c.name}</a></li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="footer-title">Contact Info</h4>
+                <ul className="footer-links" style={{ color: '#9ca3af', fontSize: '0.9rem' }}>
+                  <li style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}><IconPhone size={14} /> +91 96003 72130</li>
+                  <li style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}><IconMail size={14} /> venkadeshg5509@gmail.com</li>
+                  <li style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}><IconMapPin size={14} style={{ marginTop: '0.2rem' }} /> Main Bazar Road, Salem, Tamil Nadu</li>
+                </ul>
+              </div>
+            </div>
+            <div className="container footer-bottom">
+              <p>© {new Date().getFullYear()} Lovely Prints. All Rights Reserved. Developed by Venkadesh.</p>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+
+  <style>
+    /* CSS Spin animation placeholder */
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</body>
+</html>
